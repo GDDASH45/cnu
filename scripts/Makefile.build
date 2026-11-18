@@ -1,0 +1,35 @@
+# SPDX-License-Identifier: GPL-2.0-only
+
+# CNU kernel build system
+
+.DEFAULT_GOAL := all
+
+Q := @
+
+CC      ?= gcc
+LD      ?= ld
+AS      ?= nasm
+AR      ?= ar
+OBJCOPY ?= objcopy
+
+CFLAGS  ?= -ffreestanding -fno-stack-protector -fno-pic
+ASFLAGS ?=
+LDFLAGS ?=
+
+obj-y :=
+subdir-y :=
+
+.PHONY: all clean
+
+all: $(obj-y)
+
+# Compile C source files
+%.o: %.c
+	$(Q)$(CC) $(CFLAGS) -c $< -o $@
+
+# Compile assembly source files
+%.o: %.asm
+	$(Q)$(AS) $(ASFLAGS) $< -o $@
+
+# Include subdirectory build descriptions
+include $(foreach dir,$(subdir-y),$(dir)/Makefile)
